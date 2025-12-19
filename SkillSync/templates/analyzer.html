@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SkillSync AI - Resume Analyzer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body { background: #f7f9fc; padding: 20px; font-family: Arial, sans-serif; }
+        .card { margin-bottom: 20px; }
+        .section-title { font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; }
+        .tag { background: #007bff; color: #fff; padding: 2px 8px; border-radius: 5px; margin: 2px; display: inline-block; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- Header / Navigation Bar -->
+<div class="d-flex align-items-center mb-4">
+
+    <!-- Left (empty for now / logo later) -->
+    <div class="flex-grow-1"></div>
+
+    <!-- Center Title -->
+    <div class="text-center flex-grow-1">
+        <h1 class="mb-0">SkillSync AI – Resume Analyzer</h1>
+    </div>
+
+    <!-- Right User Info -->
+    <div class="flex-grow-1 text-end">
+        👤 <strong>{{ request.user.username }}</strong>
+        <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-danger ms-2">
+            Logout
+        </a>
+    </div>
+
+</div>
+    <!-- Upload Form -->
+    <div class="card p-3 mb-4">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Analyze Resume</button>
+        </form>
+    </div>
+
+    {% if show_results %}
+    <!-- Results Section -->
+    <div class="card p-3">
+        <h2 class="section-title">Candidate Information</h2>
+        <p><strong>Name:</strong> {{ name }}</p>
+        <p><strong>Email:</strong> {{ email }}</p>
+        <p><strong>Contact:</strong> {{ contact }}</p>
+        <p><strong>Education:</strong> 
+            {% for edu in education %} 
+                <span>{{ edu }}</span><br>
+            {% endfor %}
+        </p>
+
+        <h2 class="section-title">Skills</h2>
+        {% for skill in skills %}
+            <span class="tag">{{ skill }}</span>
+        {% endfor %}
+
+        <h2 class="section-title mt-3">Projects</h2>
+        <ul>
+            {% for project in projects %}
+                <li>{{ project }}</li>
+            {% endfor %}
+        </ul>
+
+        <h2 class="section-title mt-3">Experience</h2>
+        <ul>
+            {% for exp in experience %}
+                <li>{{ exp }}</li>
+            {% endfor %}
+        </ul>
+
+        <h2 class="section-title mt-3">Achievements / Certifications</h2>
+        <ul>
+            {% for ach in achievements %}
+                <li>{{ ach }}</li>
+            {% endfor %}
+        </ul>
+
+        <h2 class="section-title mt-3">Predicted Category & Job Recommendations</h2>
+        <p><strong>Category:</strong> {{ predicted_category }}</p>
+        <ul>
+            {% for job in recommended_jobs %}
+                <li>{{ job }}</li>
+            {% endfor %}
+        </ul>
+
+        <h2 class="section-title mt-3">Resume Score: {{ resume_score }}/100</h2>
+        <h2 class="section-title mt-3">Tips to Improve Resume</h2>
+        <ul>
+            {% for tip in resume_tips %}
+                <li>{{ tip }}</li>
+            {% endfor %}
+        </ul>
+
+        
+    </div>
+    {% endif %}
+    <div style="text-align:center; margin-top:20px;">
+    {% if show_results %}
+<form method="post" action="{% url 'chatbot' %}" style="text-align:center; margin-top:20px;">
+    {% csrf_token %}
+    <input type="hidden" name="category" value="{{ predicted_category }}">
+    <input type="hidden" name="skills" value="{{ skills|join:', ' }}">
+    <button type="submit" class="btn btn-success">
+        🤖 Ask AI Assistant
+    </button>
+</form>
+{% endif %}
+
+</div>
+
+
+</div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SkillSync AI | Career Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+<div class="container mt-4">
+
+    <h2 class="text-center mb-3">🤖 SkillSync AI Career Assistant</h2>
+
+    <div class="card p-3 mb-3">
+        <p><strong>Job Category:</strong> {{ category }}</p>
+        <p><strong>Skills:</strong> {{ skills }}</p>
+    </div>
+
+    <div class="card p-3">
+        <form method="post">
+            {% csrf_token %}
+            <textarea name="question" class="form-control mb-3"
+                placeholder="Ask about jobs, companies, skills improvement..."
+                required></textarea>
+
+            <button class="btn btn-primary w-100">
+                Ask AI
+            </button>
+        </form>
+    </div>
+
+    {% if response %}
+    <div class="card p-3 mt-3">
+        <h5>AI Response</h5>
+        <pre style="white-space: pre-wrap;">{{ response }}</pre>
+    </div>
+    {% endif %}
+
+    <div class="text-center mt-3">
+        <a href="{% url 'analyzer' %}" class="btn btn-secondary">
+            ⬅ Back to Analyzer
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>
